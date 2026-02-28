@@ -1,0 +1,44 @@
+PARAMETER SPACE SUMMARY
+==================================================
+
+Total layouts: 10000
+Valid layouts: 10000
+Invalid layouts: 0
+
+Parameter Ranges:
+
+transmon_width_um:
+  Min: 100.00
+  Max: 300.00
+  Mean: 200.00
+  Std: 57.74
+
+transmon_height_um:
+  Min: 100.00
+  Max: 300.00
+  Mean: 200.00
+  Std: 57.74
+
+coupling_gap_um:
+  Min: 50.00
+  Max: 150.00
+  Mean: 100.00
+  Std: 28.87
+
+resonator_length_um:
+  Min: 500.10
+  Max: 1999.88
+  Mean: 1250.00
+  Std: 433.03
+
+junction_area_nm2:
+  Min: 50.00
+  Max: 200.00
+  Mean: 125.00
+  Std: 43.30
+
+substrate_thickness_um:
+  Min: 200.02
+  Max: 499.97
+  Mean: 350.00
+  Std: 86.61

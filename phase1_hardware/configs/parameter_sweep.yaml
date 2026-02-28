@@ -1,0 +1,50 @@
+# Phase 1.1 - Parameter Sweep Configuration
+# Latin Hypercube Sampling for 10,000 layouts
+
+parameter_ranges:
+  transmon_width_um:
+    min: 100
+    max: 300
+    description: "Width of transmon pocket in micrometers"
+  
+  transmon_height_um:
+    min: 100
+    max: 300
+    description: "Height of transmon pocket in micrometers"
+  
+  coupling_gap_um:
+    min: 50
+    max: 150
+    description: "Gap between transmon and coupling capacitor"
+  
+  resonator_length_um:
+    min: 500
+    max: 2000
+    description: "Total length of meandered resonator"
+  
+  junction_area_nm2:
+    min: 50
+    max: 200
+    description: "Josephson junction area in square nanometers"
+  
+  substrate_thickness_um:
+    min: 200
+    max: 500
+    description: "Thickness of silicon substrate"
+
+constraints:
+  min_feature_size_um: 2
+  max_aspect_ratio: 3.0
+  min_coupling_gap_um: 50
+  
+output:
+  num_layouts: 10000
+  batch_size: 1000
+  format: ["json", "gds"]
+  compression: true
+
+simulation_defaults:
+  substrate_material: "Silicon"
+  metal_material: "Aluminum"
+  thickness_metal_nm: 100
+  temperature_mK: 20

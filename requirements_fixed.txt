@@ -1,0 +1,55 @@
+# Core scientific - specific working versions
+numpy==2.2.6
+scipy==1.15.3
+matplotlib==3.7.1
+pandas==2.0.3
+jupyter==1.0.0
+ipykernel==6.0.0
+tqdm==4.67.3
+h5py==3.15.1
+pyyaml==6.0.3
+
+# Quantum simulation - tested versions
+qutip==4.7.5
+qiskit==0.43.3
+qiskit-metal==0.1.2
+qiskit-dynamics==0.4.0
+qiskit-experiments==0.5.0
+qiskit-optimization==0.5.0
+qiskit-machine-learning==0.6.1
+qiskit-nature==0.6.1
+
+# PyEPR dependencies
+pymongo==3.12.3
+PySpice==1.5
+gdspy==1.6.13
+
+# Deep learning - GPU enabled
+torch==2.7.1+cu118
+torchvision==0.22.1+cu118
+torchaudio==2.7.1+cu118
+torch-geometric==2.3.0
+tensorflow==2.13.0
+
+# Reinforcement learning
+stable-baselines3==2.0.0
+gymnasium==0.28.1
+sb3-contrib==2.0.0
+
+# Visualization
+plotly==5.14.0
+seaborn==0.12.2
+
+# Utilities
+scikit-learn==1.3.0
+optuna==3.3.0
+wandb==0.15.0
+tensorboard==2.13.0
+
+# Physics-informed
+deepxde==1.9.0
+sympy==1.12
+
+# Data management
+dask==2023.5.0
+zarr==2.15.0

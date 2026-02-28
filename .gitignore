@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# Conda
+*.conda
+miniconda3/
+anaconda3/
+
+# Data
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.mat
+*.db
+*.sqlite
+*.sqlite3
+
+# Results
+results/models/*
+!results/models/.gitkeep
+results/figures/*
+!results/figures/.gitkeep
+results/trajectories/*
+!results/trajectories/.gitkeep
+
+# Datasets (we symlink these, don't store in repo)
+~/Research/Datasets/
+
+# Logs
+*.log
+logs/
+wandb/
+
+# Large files
+*.tar
+*.gz
+*.zip
+*.rar
+*.7z
+*.bin
+*.exe
+*.dmg
+*.iso
+
+# Environment
+.env
+.venv
+conda-env/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
