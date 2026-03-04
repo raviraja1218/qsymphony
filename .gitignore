@@ -76,3 +76,5 @@ conda-env/
 *.swo
 *~
 .DS_Store
+*.eps
+*.eps
