@@ -1,0 +1,6 @@
+Dataset,Error Rate $(1 - F) \times 10^2$,Dispersive Shift $2\chi / 2\pi$ (MHz)
+RQC Q6,49.38(76),-1.74
+RQC Q5,49.52(25),-0.95
+RQC Q4,50.25(72),-0.73
+RQC Q2,50.80(41),-0.69
+RQC Q3,48.40(57),-0.66

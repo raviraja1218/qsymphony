@@ -1,0 +1,5 @@
+# Phase 3 Two-Mode Squeezing Parameters
+G_TMS_MHZ = 1583.3
+G_TMS_HZ = 1.6e+09
+EXPECTED_E_N = 0.2505
+# Generated: $(date)

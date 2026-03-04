@@ -1,0 +1,63 @@
+# Phase 4 Configuration - Error Mitigation & Readout Classification
+
+# Qubit variants (RQC naming)
+qubits:
+  Q2:
+    chi_MHz: -0.69
+    t1_us: 85
+    t2_us: 45
+  Q3:
+    chi_MHz: -0.66
+    t1_us: 82
+    t2_us: 43
+  Q4:
+    chi_MHz: -0.73
+    t1_us: 88
+    t2_us: 47
+  Q5:
+    chi_MHz: -0.95
+    t1_us: 79
+    t2_us: 41
+  Q6:
+    chi_MHz: -1.74
+    t1_us: 91
+    t2_us: 48
+
+# Readout parameters
+readout:
+  resonator_freq_GHz: 6.5
+  kappa_MHz: 10.0
+  measurement_time_ns: 1000
+  amplitude: 1.0
+  snr_db: 15
+  n_samples_per_state: 10000
+
+# Noise sources
+noise:
+  white_noise_std: 0.1
+  flicker_noise_fraction: 0.05
+  crosstalk_rotation_deg: 0.5
+
+# Classifier settings
+classifier:
+  test_size: 0.2
+  val_size: 0.15
+  random_seed: 42
+  cv_folds: 5
+
+# PINN architecture
+pinn:
+  hidden_layers: 5
+  neurons_per_layer: 256
+  activation: "swish"
+  gate_time_ns: 100
+  depolarizing_rate: 0.01
+
+# Paths
+paths:
+  readout_data: "~/Research/Datasets/qsymphony/raw_simulations/readout_data/"
+  iq_data: "~/Research/Datasets/qsymphony/raw_simulations/readout_data/iq_data/"
+  metadata: "~/Research/Datasets/qsymphony/raw_simulations/readout_data/metadata/"
+  figures: "~/projects/qsymphony/results/phase4/figures/"
+  data: "~/projects/qsymphony/results/phase4/data/"
+  models: "~/projects/qsymphony/results/models/"

@@ -1,0 +1,59 @@
+# Phase 3 Configuration - Reinforcement Learning Control
+
+# PPO Hyperparameters
+ppo:
+  # Network architecture
+  policy_hidden_dim: 256
+  value_hidden_dim: 256
+  lstm_hidden_dim: 128
+  num_layers: 3
+  
+  # PPO specific
+  clip_param: 0.2
+  gamma: 0.99
+  gae_lambda: 0.95
+  learning_rate: 3e-4
+  value_coef: 0.5
+  entropy_coef: 0.01
+  max_grad_norm: 0.5
+  
+  # Training
+  batch_size: 64
+  mini_batch_size: 32
+  epochs_per_update: 10
+  target_kl: 0.01
+  
+# Environment parameters
+env:
+  time_total_us: 50.0
+  dt_ns: 1.0
+  n_steps: 50000
+  
+# Reward function weights
+reward:
+  lambda_photon: 0.1      # Photon penalty weight
+  mu_thermal: 0.05        # Thermal deviation weight
+  entanglement_target: 0.693  # log(2)
+  
+# Training phases
+oracle:
+  total_timesteps: 10000000  # 10M steps (~2000 episodes)
+  eval_frequency: 50         # episodes
+  save_frequency: 50         # episodes
+  early_stopping_episodes: 10 # consecutive episodes above target
+  
+measurement:
+  total_timesteps: 5000000    # 5M steps (~1000 episodes)
+  transfer_lr: 1e-4           # Lower learning rate for transfer
+  target_hold_duration: 50000 # full episode (50μs)
+  
+# Paths
+paths:
+  oracle_model: "~/projects/qsymphony/results/models/ppo_oracle_final.zip"
+  measurement_model: "~/projects/qsymphony/results/models/ppo_measurement_final.zip"
+  golden_path: "~/Research/Datasets/qsymphony/raw_simulations/oracle_training/golden_path.csv"
+  oracle_trajectories: "~/Research/Datasets/qsymphony/raw_simulations/oracle_training/trajectories/"
+  rl_checkpoints: "~/Research/Datasets/qsymphony/raw_simulations/rl_training/checkpoints/"
+  figures: "~/projects/qsymphony/results/phase3/figures/"
+  data: "~/projects/qsymphony/results/phase3/data/"
+  trajectories: "~/projects/qsymphony/results/phase3/trajectories/"

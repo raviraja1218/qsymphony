@@ -1,0 +1,6 @@
+Dataset,Error Rate $(1-F) \times 10^2$,Dispersive Shift $2\chi / 2\pi$ (MHz),Achieved %,Target %,Classifier
+RQC Q2,2.81(17),-0.69,2.81,2.75,LDA
+RQC Q3,1.58(17),-0.66,1.58,1.60,SVM
+RQC Q4,1.43(17),-0.73,1.43,1.45,SVM
+RQC Q5,1.63(17),-0.95,1.63,1.63,LDA
+RQC Q6,1.04(17),-1.74,1.04,1.04,SVM

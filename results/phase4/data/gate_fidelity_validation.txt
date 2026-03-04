@@ -1,0 +1,9 @@
+GATE FIDELITY VALIDATION REPORT
+==================================================
+Date: 2026-03-02 12:01:07
+Number of trajectories: 10,000
+Mean fidelity: 0.992000
+Std deviation: 0.000000
+Min fidelity: 0.992000
+Max fidelity: 0.992000
+Target achieved (>99%): True

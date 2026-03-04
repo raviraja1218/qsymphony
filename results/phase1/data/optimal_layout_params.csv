@@ -1,0 +1,2 @@
+layout_id,qubit_frequency_ghz,mechanical_frequency_mhz,coupling_g0_mhz,confinement_percent,Q_qubit,Q_mech,EC_ghz,EJ_ghz,anharmonicity_mhz,capacitance_fF,valid
+layout_004034,4.753,492.4,11.19,98.94,1197081,2477123,0.186,12.63,-205.7,78.0,True

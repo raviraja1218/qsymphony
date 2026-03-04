@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "layout_id": "layout_004034",
+    "date": "2026-03-01",
+    "version": "1.0",
+    "confinement_percent": 98.94
+  },
+  "qubit": {
+    "frequency_ghz": 4.753,
+    "ec_ghz": 0.186,
+    "ej_ghz": 12.63,
+    "anharmonicity_mhz": -205.7,
+    "capacitance_fF": 78.0,
+    "quality_factor": 1197081.0
+  },
+  "mechanical": {
+    "frequency_mhz": 492.4,
+    "quality_factor": 2477123.0,
+    "effective_mass_kg": 1.5e-15
+  },
+  "optical": {
+    "frequency_thz": 193.5,
+    "quality_factor": 10000000.0,
+    "wavelength_nm": 1550
+  },
+  "couplings": {
+    "g0_qubit_mech_mhz": 11.19,
+    "g_coupling_mech_opt_hz": 850.0,
+    "dispersive_shift_khz": -215.0
+  },
+  "losses": {
+    "t1_qubit_us": 85.0,
+    "t2_qubit_us": 45.0,
+    "t1_mech_us": 1200.0,
+    "dielectric_participation": 0.023,
+    "tls_coupling_hz": 150.0
+  }
+}

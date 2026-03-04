@@ -1,0 +1,13 @@
+{
+  "qiskit_depth": 37,
+  "ai_depth": 21,
+  "improvement_percent": 43.24324324324324,
+  "methods": [
+    "Qiskit Default",
+    "AI-Optimized"
+  ],
+  "depths": [
+    37,
+    21
+  ]
+}

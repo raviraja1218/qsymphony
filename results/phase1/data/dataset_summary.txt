@@ -1,0 +1,21 @@
+
+    ========================================
+    DATASET SUMMARY
+    ========================================
+    Total layouts: 10000
+    Valid layouts: 10000
+    Validation rate: 100.0%
+    
+    Parameter ranges:
+      Junction width: 100 - 500 nm
+      Junction length: 100 - 300 nm
+      Pad area: 50 - 200 µm²
+      Finger length: 10 - 100 µm
+      Beam length: 50 - 500 µm
+    
+    File locations:
+      Layouts: /home/raviraja/Research/Datasets/qsymphony/raw_simulations/layouts/raw_layouts
+      Index: /home/raviraja/Research/Datasets/qsymphony/raw_simulations/layouts/layouts_index.csv
+      Figures: /home/raviraja/projects/qsymphony/results/phase1/figures
+    ========================================
+    

@@ -1,0 +1,24 @@
+{
+  "circuit_name": "parity_check_3qubit",
+  "description": "3-qubit parity measurement circuit",
+  "qiskit_version": "0.44.1",
+  "transpiler_settings": {
+    "basis_gates": [
+      "cx",
+      "u1",
+      "u2",
+      "u3"
+    ],
+    "optimization_level": 3,
+    "coupling_map": "linear_3qubit",
+    "layout_method": "trivial",
+    "routing_method": "stochastic",
+    "seed_transpiler": 42
+  },
+  "results": {
+    "qiskit_depth": 37,
+    "ai_optimized_depth": 21,
+    "improvement_percent": 43.2
+  },
+  "date": "2026-03-04"
+}

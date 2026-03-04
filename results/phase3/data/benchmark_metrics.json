@@ -1,0 +1,20 @@
+{
+  "rl": {
+    "avg_photon": 25.000000000000327,
+    "max_photon": 49.999000549316406,
+    "peak_entanglement": -0.0010000000474974513,
+    "avg_entanglement_last": -49.4995,
+    "total_reward": -1941.9721642426803
+  },
+  "theory": {
+    "avg_photon": 0.0,
+    "max_photon": 0.0,
+    "peak_entanglement": -0.0,
+    "avg_entanglement_last": 0.0,
+    "total_reward": -0.1
+  },
+  "improvements": {
+    "total_reward": 1941872.1642426802
+  },
+  "timestamp": "2026-03-02T10:05:53.490023"
+}

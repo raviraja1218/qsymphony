@@ -1,244 +1,237 @@
 #!/usr/bin/env python
 """
-Generate Qiskit Metal layouts using available components:
-- TransmonPocket from qubits/
-- Interdigital capacitors from lumped/
-- Meandered resonators from tlines/
-- Launchpad terminations from terminations/
+Step 1.1: Generate 10,000 candidate chip layouts using Qiskit Metal
+Fixed options format
 """
 
 import os
 import json
-import pandas as pd
+import yaml
 import numpy as np
+import pandas as pd
 from datetime import datetime
-import multiprocessing as mp
 from tqdm import tqdm
-import time
-import traceback
+import random
+from pathlib import Path
 
-# Import available Qiskit Metal components
-from qiskit_metal import designs, draw
-from qiskit_metal.qlibrary.qubits.transmon_pocket import TransmonPocket
-from qiskit_metal.qlibrary.tlines.meandered import RouteMeander
-
-# Try to import interdigital capacitor
+# Qiskit Metal imports
 try:
-    from qiskit_metal.qlibrary.lumped.cap_n_interdigital import CapNInterdigital
-    HAS_INTERDIGITAL = True
-    print("✅ Using CapNInterdigital")
-except ImportError:
-    try:
-        from qiskit_metal.qlibrary.lumped.cap_3_interdigital import Cap3Interdigital
-        HAS_INTERDIGITAL = True
-        print("✅ Using Cap3Interdigital")
-    except ImportError:
-        HAS_INTERDIGITAL = False
-        print("⚠️ No interdigital capacitor found, using connection pads only")
+    from qiskit_metal import designs, draw
+    from qiskit_metal.qlibrary.qubits.transmon_pocket import TransmonPocket
+    from qiskit_metal.qlibrary.couplers.coupled_line_tee import CoupledLineTee
+    from qiskit_metal.qlibrary.tlines.meandered import RouteMeander
+except ImportError as e:
+    print(f"Import error: {e}")
+    raise
 
-def create_single_layout(params_dict, output_dir):
-    """Create one chip layout from parameters"""
-    
-    layout_id = params_dict['layout_id']
-    
-    try:
-        # Create design
-        design = designs.DesignPlanar(f"Design_{layout_id}")
-        
-        # Extract parameters
-        w = float(params_dict['transmon_width_um'])
-        h = float(params_dict['transmon_height_um'])
-        gap = float(params_dict['coupling_gap_um'])
-        length = float(params_dict['resonator_length_um'])
-        
-        # Add ground plane
-        design.planar.add_gnd_polygon(layers=[1])
-        
-        # Create transmon qubit with built-in coupling pads
-        transmon_options = dict(
-            pos_x='0mm',
-            pos_y='0mm',
-            pocket_width=f'{w}um',
-            pocket_height=f'{h}um',
-            pocket_type='rectangular',
-            inductor_width='10um',
-            inductor_gap='10um',
-            connection_pads=dict(
-                readout=dict(loc='right', pad_width='50um', pad_height='50um'),
-                drive=dict(loc='left', pad_width='50um', pad_height='50um'),
-                flux=dict(loc='bottom', pad_width='50um', pad_height='50um')
-            )
-        )
-        q1 = TransmonPocket(design, f'Q_{layout_id}', options=transmon_options)
-        
-        # Create coupling element (interdigital capacitor if available)
-        if HAS_INTERDIGITAL:
-            try:
-                cap_options = dict(
-                    pos_x=f'{gap}um',
-                    pos_y='0mm',
-                    finger_length='50um',
-                    finger_width='5um',
-                    finger_gap='5um',
-                    n_fingers=5
-                )
-                cap = CapNInterdigital(design, f'C_{layout_id}', options=cap_options)
-                design.connect(f'Q_{layout_id}.readout', f'C_{layout_id}.tline')
-            except:
-                # Fall back to direct connection
-                design.connect(f'Q_{layout_id}.readout', f'R_{layout_id}.tline')
-        else:
-            # Direct connection from transmon to resonator
-            design.connect(f'Q_{layout_id}.readout', f'R_{layout_id}.tline')
-        
-        # Create meandered resonator
-        meander_options = dict(
-            pos_x=f'{gap + 100}um',
-            pos_y='0mm',
-            total_length=f'{length}um',
-            meander='sinusoidal',
-            amplitude='100um',
-            period='200um',
-            width='10um',
-            layer='1'
-        )
-        res = RouteMeander(design, f'R_{layout_id}', options=meander_options)
-        
-        # Create layout directory
-        layout_dir = os.path.join(output_dir, layout_id)
-        os.makedirs(layout_dir, exist_ok=True)
-        
-        # Save design as JSON
-        json_file = os.path.join(layout_dir, f"{layout_id}.json")
-        design.save(json_file)
-        
-        # Export GDS
-        try:
-            gds_file = os.path.join(layout_dir, f"{layout_id}.gds")
-            design.export_gds(gds_file)
-            gds_status = "exported"
-        except Exception as e:
-            gds_status = f"failed: {str(e)}"
-            gds_file = None
-        
-        # Save parameters
-        params_file = os.path.join(layout_dir, "parameters.json")
-        with open(params_file, 'w') as f:
-            json.dump(params_dict, f, indent=2)
-        
-        return {
-            'layout_id': layout_id,
-            'status': 'success',
-            'json_file': json_file,
-            'gds_status': gds_status,
-            'gds_file': gds_file,
-            'directory': layout_dir
-        }
-        
-    except Exception as e:
-        error_trace = traceback.format_exc()
-        return {
-            'layout_id': layout_id,
-            'status': 'failed',
-            'error': str(e),
-            'trace': error_trace
-        }
+# Load configuration
+config_path = Path(__file__).parent.parent / 'config' / 'phase1_config.yaml'
+with open(config_path, 'r') as f:
+    config = yaml.safe_load(f)
 
-def process_batch(batch_num):
-    """Process one batch of layouts"""
+# Expand user paths
+def expand_path(path):
+    return str(Path(os.path.expanduser(path)).expanduser())
+
+OUTPUT_DIR = Path(expand_path(config['paths']['layouts_raw']))
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+INDEX_FILE = OUTPUT_DIR.parent / 'layouts_index.csv'
+
+# Set random seed
+np.random.seed(config['simulation']['seed'])
+random.seed(config['simulation']['seed'])
+
+def generate_parameter_grid(config):
+    """Generate parameter combinations"""
     
-    # Setup paths
-    params_file = f"../datasets/raw_simulations/layouts/batch_{str(batch_num).zfill(3)}_params.csv"
-    output_base = f"../datasets/raw_simulations/layouts/real_batch_{str(batch_num).zfill(3)}"
-    os.makedirs(output_base, exist_ok=True)
+    transmon_params = config['transmon']
+    cap_params = config['capacitor']
+    res_params = config['resonator']
     
-    # Load parameters
-    df = pd.read_csv(params_file)
-    print(f"\n📦 Batch {batch_num}: Processing {len(df)} layouts")
+    # Generate 10,000 random samples
+    print(f"Generating 10,000 random samples...")
+    samples = []
+    for _ in range(10000):
+        sample = {
+            'junction_width_nm': random.randint(transmon_params['junction_width_nm']['min'], 
+                                               transmon_params['junction_width_nm']['max']),
+            'junction_length_nm': random.randint(transmon_params['junction_length_nm']['min'], 
+                                                transmon_params['junction_length_nm']['max']),
+            'pad_area_um2': random.randint(transmon_params['pad_area_um2']['min'], 
+                                          transmon_params['pad_area_um2']['max']),
+            'gap_to_ground_um': random.randint(transmon_params['gap_to_ground_um']['min'], 
+                                              transmon_params['gap_to_ground_um']['max']),
+            'finger_length_um': random.randint(cap_params['finger_length_um']['min'], 
+                                              cap_params['finger_length_um']['max']),
+            'finger_width_um': random.randint(cap_params['finger_width_um']['min'], 
+                                             cap_params['finger_width_um']['max']),
+            'finger_count': random.randint(cap_params['finger_count']['min'], 
+                                          cap_params['finger_count']['max']),
+            'finger_gap_um': random.randint(cap_params['finger_gap_um']['min'], 
+                                           cap_params['finger_gap_um']['max']),
+            'hbar_thickness_um': random.randint(res_params['hbar_thickness_um']['min'], 
+                                               res_params['hbar_thickness_um']['max']),
+            'beam_length_um': random.randint(res_params['beam_length_um']['min'], 
+                                            res_params['beam_length_um']['max']),
+            'beam_width_um': random.randint(res_params['beam_width_um']['min'], 
+                                           res_params['beam_width_um']['max']),
+        }
+        samples.append(sample)
     
-    results = []
-    for idx, row in tqdm(df.iterrows(), total=len(df), desc=f"Batch {batch_num}"):
-        params = row.to_dict()
-        result = create_single_layout(params, output_base)
-        results.append(result)
-        
-        # Small delay
-        time.sleep(0.05)
+    return samples
+
+def create_chip_layout(design, params, layout_id):
+    """Create a single chip layout"""
     
-    # Save batch results
-    results_file = os.path.join(output_base, "generation_results.json")
+    design.delete_all_components()
+    design.overwrite_enabled = True
+    design.add_ground_plane()
     
-    success_count = sum(1 for r in results if r['status'] == 'success')
-    fail_count = sum(1 for r in results if r['status'] == 'failed')
+    # Calculate pad size
+    pad_size_um = np.sqrt(params['pad_area_um2'])
+    pad_size_nm = pad_size_um * 1000
     
-    summary = {
-        'batch': batch_num,
-        'total': len(results),
-        'success': success_count,
-        'failed': fail_count,
-        'success_rate': f"{(success_count/len(results))*100:.1f}%",
-        'results': results
+    # Transmon options - using proper format
+    transmon_options = {
+        'pos_x': '0mm',
+        'pos_y': '0mm',
+        'junction_width': f"{params['junction_width_nm']}nm",
+        'junction_length': f"{params['junction_length_nm']}nm",
+        'pad_width': f"{pad_size_nm:.0f}nm",
+        'pad_height': f"{pad_size_nm:.0f}nm",
+        'gap': f"{params['gap_to_ground_um']}um",
+        'connection_pads': {
+            'readout': {'loc_W': 1, 'pad_width': '175um'},
+            'drive': {'loc_W': 0, 'pad_width': '100um'}
+        }
     }
     
-    with open(results_file, 'w') as f:
-        json.dump(summary, f, indent=2)
+    print(f"Debug - Transmon options: {transmon_options}")  # Debug
     
-    print(f"\n✅ Batch {batch_num} complete: {success_count}/{len(results)} successful")
-    return batch_num, summary
+    q1 = TransmonPocket(design, f'Q{layout_id}', options=transmon_options)
+    
+    # Capacitor options
+    cap_options = {
+        'pos_x': '200um',
+        'pos_y': '0um',
+        'finger_length': f"{params['finger_length_um']}um",
+        'finger_width': f"{params['finger_width_um']}um",
+        'finger_count': params['finger_count'],
+        'finger_gap': f"{params['finger_gap_um']}um",
+        'orientation': '0'
+    }
+    
+    cap = CoupledLineTee(design, f'C{layout_id}', options=cap_options)
+    
+    # Resonator options
+    res_options = {
+        'pos_x': '400um',
+        'pos_y': '0um',
+        'length': f"{params['beam_length_um']}um",
+        'width': f"{params['beam_width_um']}um",
+        'orientation': '0'
+    }
+    
+    res = RouteMeander(design, f'R{layout_id}', options=res_options)
+    
+    # Connect
+    design.connect_components(f'Q{layout_id}', f'C{layout_id}')
+    design.connect_components(f'C{layout_id}', f'R{layout_id}')
+    
+    return design
+
+def validate_layout(design):
+    """Validate layout"""
+    try:
+        if design.check_overlaps():
+            return False, "Overlapping components"
+        return True, "Valid"
+    except Exception as e:
+        return False, str(e)
+
+def save_layout(design, params, layout_id):
+    """Save layout"""
+    json_str = design.save_to_string()
+    layout_data = json.loads(json_str)
+    
+    layout_data['metadata'] = {
+        'layout_id': f'layout_{layout_id:06d}',
+        'timestamp': datetime.now().isoformat(),
+        'parameters': params,
+        'version': '1.0'
+    }
+    
+    filename = OUTPUT_DIR / f'layout_{layout_id:06d}.json'
+    with open(filename, 'w') as f:
+        json.dump(layout_data, f, indent=2)
+    
+    return filename
+
+def test_single_layout():
+    """Test creating one layout"""
+    print("Testing single layout creation...")
+    
+    # Simple test params
+    params = {
+        'junction_width_nm': 200,
+        'junction_length_nm': 150,
+        'pad_area_um2': 100,
+        'gap_to_ground_um': 20,
+        'finger_length_um': 50,
+        'finger_width_um': 5,
+        'finger_count': 10,
+        'finger_gap_um': 3,
+        'hbar_thickness_um': 10,
+        'beam_length_um': 200,
+        'beam_width_um': 15,
+    }
+    
+    try:
+        design = designs.DesignPlanar("Test")
+        design = create_chip_layout(design, params, 1)
+        print("✅ Layout created successfully")
+        return True
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 def main():
     print("="*60)
-    print("QISKIT METAL LAYOUT GENERATOR (Fixed Version)")
-    print("="*60)
-    print(f"Interdigital capacitor available: {HAS_INTERDIGITAL}")
+    print("STEP 1.1: Generate Layouts")
     print("="*60)
     
-    # Process all batches
-    batches = range(10)
-    all_results = []
+    # First test single layout
+    if not test_single_layout():
+        print("Test failed - aborting")
+        return
     
-    start_time = time.time()
+    # Generate full batch
+    print("\n📊 Generating parameter combinations...")
+    samples = generate_parameter_grid(config)
     
-    for batch in batches:
-        batch_num, summary = process_batch(batch)
-        all_results.append(summary)
+    print("\n🏗️  Generating layouts...")
+    index_data = []
+    valid_count = 0
+    
+    for i, params in enumerate(tqdm(samples[:10])):  # Start with 10
+        layout_id = i + 1
         
-        # Brief pause between batches
-        if batch < 9:
-            print("⏳ Cooling down for 10 seconds...")
-            time.sleep(10)
+        try:
+            design = designs.DesignPlanar(f"Layout_{layout_id}")
+            design = create_chip_layout(design, params, layout_id)
+            is_valid, message = validate_layout(design)
+            
+            if is_valid:
+                filename = save_layout(design, params, layout_id)
+                index_data.append({'layout_id': f'layout_{layout_id:06d}', 'filename': str(filename), **params, 'valid': True})
+                valid_count += 1
+        except Exception as e:
+            print(f"Error on layout {layout_id}: {e}")
     
-    total_time = time.time() - start_time
-    minutes = int(total_time // 60)
-    seconds = int(total_time % 60)
-    
-    # Overall summary
-    total_success = sum(r['success'] for r in all_results)
-    total_layouts = sum(r['total'] for r in all_results)
-    
-    print("\n" + "="*60)
-    print("FINAL SUMMARY")
-    print("="*60)
-    print(f"Total layouts processed: {total_layouts}")
-    print(f"Successful: {total_success}")
-    print(f"Failed: {total_layouts - total_success}")
-    print(f"Success rate: {(total_success/total_layouts)*100:.1f}%")
-    print(f"Total time: {minutes}m {seconds}s")
-    print("="*60)
-    
-    # Save master summary
-    master_summary = {
-        'date': datetime.now().isoformat(),
-        'total_layouts': total_layouts,
-        'successful': total_success,
-        'failed': total_layouts - total_success,
-        'batches': all_results
-    }
-    
-    with open('../datasets/raw_simulations/layouts/master_summary.json', 'w') as f:
-        json.dump(master_summary, f, indent=2)
-    
-    print("\n📊 Master summary saved to: ../datasets/raw_simulations/layouts/master_summary.json")
+    print(f"\n✅ Generated {valid_count} valid layouts")
 
 if __name__ == "__main__":
     main()

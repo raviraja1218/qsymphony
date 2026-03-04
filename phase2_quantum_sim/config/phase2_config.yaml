@@ -1,0 +1,36 @@
+# Phase 2 Configuration - Quantum Environment Digital Twin
+
+# Import Phase 1 hardware parameters
+hardware_params: "~/projects/qsymphony/phase2_quantum_sim/hardware_params.json"
+
+# Hilbert space truncation
+hilbert:
+  transmon_levels: 2      # Qubit approximation (anharmonicity -205 MHz)
+  mechanical_levels: 15   # Sufficient for thermal states up to 50 μs
+
+# Simulation parameters
+simulation:
+  time_total_us: 50.0     # Total simulation time (μs)
+  time_step_ns: 1.0       # Time step for integration (ns)
+  save_interval_ns: 10.0  # Save state every 10 ns
+  n_trajectories: 1000    # Number of Monte Carlo trajectories
+  seed: 42                 # Random seed for reproducibility
+
+# Physical constants
+constants:
+  hbar: 1.0545718e-34     # Reduced Planck constant (J·s)
+  kBoltzmann: 1.380649e-23 # Boltzmann constant (J/K)
+  temperature_mK: 20       # Base temperature (mK)
+
+# Measurement parameters
+measurement:
+  kappa_MHz: 50.0          # Cavity linewidth (MHz)
+  efficiency: 0.9          # Homodyne detection efficiency
+  photon_number: 0          # Initial photon number
+
+# Output paths
+paths:
+  trajectories: "~/Research/Datasets/qsymphony/raw_simulations/baseline_trajectories/"
+  wigner: "~/projects/qsymphony/results/phase2/wigner_baseline/"
+  validation: "~/projects/qsymphony/results/phase2/validation/"
+  data: "~/projects/qsymphony/results/phase2/data/"

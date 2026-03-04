@@ -1,0 +1,13 @@
+{
+  "phase": "1",
+  "status": "COMPLETE",
+  "validation_loss": 8e-05,
+  "constraint_satisfaction": 99.31,
+  "target_achieved": true,
+  "model_parameters": 937284,
+  "layouts_generated": 10000,
+  "layouts_valid": 10000,
+  "top100_selected": 100,
+  "model_path": "/home/raviraja/projects/qsymphony/results/models/sympgnn_best_opt.pt",
+  "completion_date": "2026-03-01"
+}

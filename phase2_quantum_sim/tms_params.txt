@@ -1,0 +1,4 @@
+# Optimal parameters for Phase 3
+g_tms_hz = 1583333333.3
+g_tms_mhz = 1583.3
+max_E_N = 0.2505

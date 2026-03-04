@@ -1,0 +1,35 @@
+{
+  "date": "2026-03-01T18:39:09.360330",
+  "parameters": {
+    "T1_q_us": 85.0,
+    "T2_q_us": 45.0,
+    "T1_m_us": 1200.0,
+    "n_th": 0.4425759088923463
+  },
+  "qubit_T1": {
+    "expected_us": 85.0,
+    "fitted_us": 85.0,
+    "error_percent": 0.0,
+    "within_5_percent": true
+  },
+  "qubit_T2": {
+    "expected_us": 45.0,
+    "fitted_us": 45.0,
+    "error_percent": 0.0,
+    "within_5_percent": true
+  },
+  "mechanical_T1": {
+    "expected_us": 1200.0,
+    "fitted_us": 1199.9999961784117,
+    "error_percent": 3.184656899672215e-07,
+    "within_5_percent": true
+  },
+  "numerical_stability": {
+    "min_n_q": 0.0,
+    "min_n_m": 0.0,
+    "max_diff_q": 0.0,
+    "max_diff_m": 0.0,
+    "stable": true
+  },
+  "overall_status": "PASS"
+}

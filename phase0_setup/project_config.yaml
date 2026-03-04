@@ -1,0 +1,58 @@
+# Q-SYMPHONY Project Configuration
+
+project:
+  name: "Q-SYMPHONY"
+  root: "~/projects/qsymphony"
+  environment: "qsymphony"
+
+paths:
+  phases:
+    phase0: "~/projects/qsymphony/phase0_setup"
+    phase1: "~/projects/qsymphony/phase1_hardware"
+    phase2: "~/projects/qsymphony/phase2_quantum_sim"
+    phase3: "~/projects/qsymphony/phase3_rl_control"
+    phase4: "~/projects/qsymphony/phase4_error_mitigation"
+    phase5: "~/projects/qsymphony/phase5_manuscript"
+  
+  results:
+    root: "~/projects/qsymphony/results"
+    figures: "~/projects/qsymphony/results/figures"
+    tables: "~/projects/qsymphony/results/tables"
+    models: "~/projects/qsymphony/results/models"
+    trajectories: "~/projects/qsymphony/results/trajectories"
+    phase1: "~/projects/qsymphony/results/phase1"
+    phase2: "~/projects/qsymphony/results/phase2"
+    phase3: "~/projects/qsymphony/results/phase3"
+    phase4: "~/projects/qsymphony/results/phase4"
+  
+  datasets:
+    root: "~/Research/Datasets/qsymphony"
+    raw: "~/Research/Datasets/qsymphony/raw_simulations"
+    processed: "~/Research/Datasets/qsymphony/processed"
+    zenodo: "~/Research/Datasets/qsymphony/zenodo_export"
+    layouts: "~/Research/Datasets/qsymphony/raw_simulations/layouts"
+    epr: "~/Research/Datasets/qsymphony/raw_simulations/epr_results"
+    baseline: "~/Research/Datasets/qsymphony/raw_simulations/baseline_trajectories"
+    rl: "~/Research/Datasets/qsymphony/raw_simulations/rl_training"
+    readout: "~/Research/Datasets/qsymphony/raw_simulations/readout_data"
+    gate: "~/Research/Datasets/qsymphony/raw_simulations/gate_optimization"
+
+hardware_defaults:
+  transmon_freq: 5.0  # GHz
+  mechanical_freq: 0.5  # GHz
+  coupling_strength: 0.01  # GHz
+  temperature: 0.020  # K
+  optical_wavelength: 1550  # nm
+
+simulation:
+  fock_truncation:
+    photons: 5
+    phonons: 10
+  time_step: 1.0  # ns
+  trajectories: 1000
+  seed: 42
+
+gpu:
+  enabled: true
+  memory_fraction: 0.8
+  parallel_jobs: 4

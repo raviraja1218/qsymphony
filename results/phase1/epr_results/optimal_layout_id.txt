@@ -1,0 +1,4 @@
+layout_004034
+Confinement: 98.94%
+g0: 11.19 MHz
+Qubit freq: 4.753 GHz
