@@ -10,7 +10,7 @@ The framework discovers robust quantum control strategies that stabilize entangl
 ## Key Results
 
 - **Steady-state entanglement stabilization:**  
-  \(E_N = 0.506 \pm 0.027\)
+  (E_N = 0.506 ± 0.027)
 
 - **Reinforcement-learning discovery of control policies**  
   exploiting weak continuous measurement backaction.
@@ -24,6 +24,28 @@ The framework discovers robust quantum control strategies that stabilize entangl
 ---
 
 ## Repository Structure
+
+
+Q-SYMPHONY/
+│
+├── phase1_hardware/
+│ ├── gnn/
+│ ├── scripts/
+│ └── pyepr/
+│
+├── phase2_quantum_sim/
+│
+├── phase3_rl_control/
+│
+├── phase4_error_mitigation/
+│
+├── results/
+│
+├── reports/
+│
+├── paper/
+│
+└── zenodo_export/
 
 
 ---
@@ -63,6 +85,9 @@ Agent discovers dynamic detuning strategies that stabilize remote entanglement.
 Final performance:
 
 
+E_N = 0.506 ± 0.027
+
+
 across three independent seeds.
 
 ---
@@ -98,6 +123,9 @@ Clone the repository:
 ```bash
 git clone https://github.com/raviraja1218/qsymphony.git
 cd qsymphony
+
+Install dependencies:
+
 pip install -r requirements.txt
 Running the Pipeline
 
@@ -127,7 +155,6 @@ exceptional point dynamics
 
 circuit depth comparison
 
-All source code used for simulations, reinforcement learning training, and circuit optimization is available in this repository.
 
 Citation
 
@@ -156,3 +183,6 @@ Quantum AI Research
 git add README.md
 git commit -m "Add project README"
 git push
+✔ Result
+
+Your GitHub will now
