@@ -1,133 +1,158 @@
-Q-SYMPHONY
+# Q-SYMPHONY  
+### Autonomous Entanglement Stabilization and Circuit Optimization in Hybrid Superconducting–Mechanical Quantum Systems
 
-Official research implementation of Q-SYMPHONY, an autonomous AI framework for entanglement stabilization and circuit optimization in hybrid superconducting–mechanical quantum systems.
+Q-SYMPHONY is an end-to-end AI-driven quantum hardware design and control framework for hybrid superconducting–mechanical systems. The project integrates geometric machine learning, reinforcement learning, and physics-informed neural networks to autonomously design, simulate, and control multimode quantum architectures.
 
-This repository contains the full codebase used in the research project:
+The framework discovers robust quantum control strategies that stabilize entanglement and reduce circuit complexity in noisy quantum environments.
 
-Autonomous Entanglement Stabilization and Circuit Optimization in Hybrid Superconducting–Mechanical Quantum Systems
+---
 
-Overview
+## Key Results
 
-Scaling superconducting quantum processors toward fault-tolerant quantum computing is limited by:
+- **Steady-state entanglement stabilization:**  
+  \(E_N = 0.506 \pm 0.027\)
 
-hardware complexity
+- **Reinforcement-learning discovery of control policies**  
+  exploiting weak continuous measurement backaction.
 
-decoherence and environmental noise
+- **Circuit depth reduction:**  
+  **43.2% improvement** over the standard Qiskit transpiler.
 
-large quantum error-correction overhead
+- **Hardware-robust architecture**  
+  tolerant to **±10% fabrication variations**.
 
-Q-SYMPHONY addresses these challenges through an integrated AI-driven digital twin framework combining:
+---
 
-Symplectic Graph Neural Networks (SympGNN) for hardware topology discovery
+## Repository Structure
 
-Recurrent Reinforcement Learning (PPO + LSTM) for entanglement stabilization
 
-Physics-Informed Neural Networks (PINNs) for noise-aware circuit optimization
+---
 
-The framework models hybrid piezo-optomechanical quantum systems where superconducting transmon qubits are coupled to acoustic resonators.
+## Project Pipeline
 
-Key Results
-Metric	Result
-Steady-state entanglement	Eₙ = 0.506 ± 0.027
-Training seeds	3 (1000, 1001, 1002)
-Circuit depth reduction	43.2%
-Hardware robustness	<5% degradation under ±10% fabrication variation
-Readout error rates	1.04–2.81%
+The Q-SYMPHONY framework consists of four major phases:
 
-The system autonomously discovers feedback-driven control policies that stabilize entanglement under realistic dissipative dynamics.
+### Phase 1 — Hardware Topology Discovery
+Symplectic Graph Neural Networks (SympGNN) optimize chip layouts while preserving Hamiltonian physics constraints.
 
-Repository Structure
-qsymphony/
+Outputs:
 
-phase1_hardware/
-   gnn/
-   scripts/
-   pyepr/
-   config/
+- optimized transmon-mechanical layout
+- electromagnetic parameters via pyEPR
+- fabrication robustness analysis
 
-phase2_quantum_sim/
-   scripts/
-   config/
+---
 
-phase3_rl_control/
-   utils/
-   scripts/
-   models/
-   config/
+### Phase 2 — Quantum System Simulation
+Open-system dynamics simulated using **QuTiP**.
 
-phase4_error_mitigation/
-   scripts/
-   checkpoints/
-   config/
+Features:
 
-results/
-   phase1/
-   phase2/
-   phase3/
-   phase4/
+- stochastic master equation solver
+- Hilbert-space truncation validation
+- Wigner function analysis
+- entanglement metric evaluation
 
-paper/
-   figures/
-   tables/
+---
 
-reports/
-   PHASE1_COMPLETION_REPORT.md
-   PHASE2_COMPLETION_REPORT.md
-   PHASE3_COMPLETION_REPORT.md
-   PHASE4_COMPLETION_REPORT.md
+### Phase 3 — Reinforcement Learning Control
+A **Recurrent PPO agent** learns adaptive control policies under continuous measurement.
 
-zenodo_export/
-   iq_data/
-   models/
-Installation
+Agent discovers dynamic detuning strategies that stabilize remote entanglement.
+
+Final performance:
+
+
+across three independent seeds.
+
+---
+
+### Phase 4 — Error Mitigation & Circuit Optimization
+
+Physics-Informed Neural Networks (PINNs) generate noise-aware control pulses and identify Liouvillian exceptional points.
+
+Achievements:
+
+- **43.2% reduction** in parity-check circuit depth
+- machine-learning-assisted readout calibration
+- noise robustness validation
+
+---
+
+## Technologies Used
+
+- Python 3.10
+- PyTorch
+- QuTiP
+- NumPy
+- Qiskit
+- CUDA GPU acceleration
+- PyEPR electromagnetic simulation
+
+---
+
+## Installation
 
 Clone the repository:
 
+```bash
 git clone https://github.com/raviraja1218/qsymphony.git
 cd qsymphony
-
-Install dependencies:
-
 pip install -r requirements.txt
-Running Experiments
-Phase 1 — Hardware Topology Discovery
+Running the Pipeline
+
+Example workflow:
+
+Hardware optimization
 python phase1_hardware/gnn/train_sympgnn_fixed3.py
-Phase 2 — Quantum Simulation
+Quantum simulation
 python phase2_quantum_sim/optimize_tms_final.py
-Phase 3 — Reinforcement Learning Control
+RL training
 python phase3_rl_control/scripts/train_phase3_final.py
-Phase 4 — Error Mitigation & Circuit Optimization
+Error mitigation and circuit optimization
 python phase4_error_mitigation/scripts/train_pinn_final.py
-Reproducing Results
+Figures
 
-Generate figures and evaluation metrics used in the manuscript.
+Main figures used in the manuscript are located in:
 
-Run evaluation:
+results/
 
-python phase3_rl_control/scripts/evaluate_agent_final.py
+including:
 
-Run robustness sweep:
+hardware topology optimization
 
-python phase3_rl_control/scripts/robustness_sweep_final.py
+entanglement stabilization curves
 
-Evaluate PINN noise model:
+exceptional point dynamics
 
-python phase4_error_mitigation/scripts/evaluate_pinn_noise_final.py
+circuit depth comparison
+
+All source code used for simulations, reinforcement learning training, and circuit optimization is available in this repository.
 
 Citation
 
-If you use this repository in academic work, please cite:
+If you use this code, please cite:
 
-Autonomous Entanglement Stabilization and Circuit Optimization
-in Hybrid Superconducting–Mechanical Quantum Systems
 
-Ravi Raja
-2026
+Q-SYMPHONY: Autonomous Entanglement Stabilization and Circuit Optimization
+in Hybrid Superconducting–Mechanical Quantum Systems.
+
 License
 
-MIT License
+This project is released under the MIT License.
 
 Author
 
 Ravi Raja
-Quantum Computing Research
+
+Quantum AI Research
+
+
+---
+
+# 3️⃣ Push README to GitHub
+
+```bash
+git add README.md
+git commit -m "Add project README"
+git push
