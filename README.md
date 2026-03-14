@@ -173,16 +173,3 @@ Author
 Ravi Raja
 
 Quantum AI Research
-
-
----
-
-# 3️⃣ Push README to GitHub
-
-```bash
-git add README.md
-git commit -m "Add project README"
-git push
-✔ Result
-
-Your GitHub will now
